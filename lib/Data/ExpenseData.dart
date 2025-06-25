@@ -1,10 +1,13 @@
+import 'package:expenses_tracker/DateTime/date_time_helper.dart';
 import 'package:expenses_tracker/models/expenses_items.dart';
-import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class ExpenseData{
+class ExpenseData extends ChangeNotifierProvider{
 
   // List of all expenses
    List <ExpenseItem> overallExpensesList = [];
+
+  ExpenseData({super.key, required super.create});
 
    // get list
    List<ExpenseItem> getAllExpensesList(){
@@ -59,5 +62,18 @@ class ExpenseData{
    Map<String,double> calculateDailyExpensesSummary(){
      Map<String, double> dailyExpensesSummary = {};
 
+     for(var expense in overallExpensesList){
+       String date = convertDateTime(expense.dataTime);
+       double amount = expense.amount;
+
+       if(dailyExpensesSummary.containsKey(date)){
+         double currentAmount = dailyExpensesSummary[date]!;
+         currentAmount += amount;
+         dailyExpensesSummary[date] = currentAmount;
+       }else{
+           dailyExpensesSummary.addAll({date: amount});
+       }
+     }
+      return dailyExpensesSummary;
    }
 }

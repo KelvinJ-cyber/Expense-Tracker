@@ -1,5 +1,7 @@
+import 'package:expenses_tracker/Data/ExpenseData.dart';
+import 'package:expenses_tracker/pages/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
 void main(){
   runApp(const ExpensesTracker());
@@ -10,8 +12,12 @@ class ExpensesTracker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
+    return ChangeNotifierProvider(
+       create: (context) => ExpenseData(),
+       builder: (context, child) => const MaterialApp(
+          debugShowCheckedModeBanner: false,
+         home: HomePage(),
+    )
     );
 
 
