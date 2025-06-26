@@ -2,12 +2,18 @@ import 'package:expenses_tracker/DateTime/date_time_helper.dart';
 import 'package:expenses_tracker/models/expenses_items.dart';
 import 'package:flutter/cupertino.dart';
 
+
 class ExpenseData extends ChangeNotifier {
 
   // List of all expenses
    List <ExpenseItem> overallExpensesList = [];
 
 
+ // void prepareData(){
+ //   if (db.readData().isNotEmpty){
+ //      overallExpensesList = db.readData();
+ //   }
+ // }
    // get list
    List<ExpenseItem> getAllExpensesList(){
      return overallExpensesList;
@@ -17,12 +23,14 @@ class ExpenseData extends ChangeNotifier {
    void addExpenses(ExpenseItem newExpense){
      overallExpensesList.add(newExpense);
      notifyListeners();
+     // db.saveData(overallExpensesList);
 
    }
 
    void deleteExpense(ExpenseItem delExpense){
      overallExpensesList.remove(delExpense);
      notifyListeners();
+     // db.saveData(overallExpensesList);
    }
 
    String getDayName(DateTime dateTime){
