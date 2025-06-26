@@ -1,13 +1,12 @@
 import 'package:expenses_tracker/DateTime/date_time_helper.dart';
 import 'package:expenses_tracker/models/expenses_items.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/cupertino.dart';
 
-class ExpenseData extends ChangeNotifierProvider{
+class ExpenseData extends ChangeNotifier {
 
   // List of all expenses
    List <ExpenseItem> overallExpensesList = [];
 
-  ExpenseData({super.key, required super.create});
 
    // get list
    List<ExpenseItem> getAllExpensesList(){
@@ -17,10 +16,13 @@ class ExpenseData extends ChangeNotifierProvider{
    // add new expense
    void addExpenses(ExpenseItem newExpense){
      overallExpensesList.add(newExpense);
+     notifyListeners();
+
    }
 
    void deleteExpense(ExpenseItem delExpense){
      overallExpensesList.remove(delExpense);
+     notifyListeners();
    }
 
    String getDayName(DateTime dateTime){
@@ -59,12 +61,12 @@ class ExpenseData extends ChangeNotifierProvider{
      return startOfWeekDate!;
    }
 
-   Map<String,double> calculateDailyExpensesSummary(){
+   Map<String, double> calculateDailyExpensesSummary(){
      Map<String, double> dailyExpensesSummary = {};
 
      for(var expense in overallExpensesList){
        String date = convertDateTime(expense.dataTime);
-       double amount = expense.amount;
+       double amount = double.parse(expense.amount) ;
 
        if(dailyExpensesSummary.containsKey(date)){
          double currentAmount = dailyExpensesSummary[date]!;

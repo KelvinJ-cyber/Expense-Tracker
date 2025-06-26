@@ -1,4 +1,5 @@
 import 'package:expenses_tracker/Data/ExpenseData.dart';
+import 'package:expenses_tracker/components/expense_tile.dart';
 import 'package:expenses_tracker/models/expenses_items.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -48,26 +49,58 @@ class _HomePageState extends State<HomePage> {
   }
 
   void save(){
+    if (newExpenseNameController.text.isEmpty || newExpenseAmountController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Please fill in all fields"))
+      );
+      return;
+    }
     ExpenseItem newExpense = ExpenseItem(
       name: newExpenseNameController.text,
-        amount: double.tryParse(newExpenseAmountController.text) ?? 0.0,
+        amount: newExpenseAmountController.text,
       dataTime: DateTime.now()
     );
      Provider.of<ExpenseData>(context, listen: false).addExpenses(newExpense);
+     Navigator.pop(context);
+      clearTextFields();
   }
 
-  void cancel(){}
+  void cancel(){
+    newExpenseNameController.clear();
+    newExpenseAmountController.clear();
+    Navigator.pop(context);
+  }
+
+  void clearTextFields(){
+    newExpenseNameController.clear();
+    newExpenseAmountController.clear();
+  }
 
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[300],
-      floatingActionButton: FloatingActionButton(
-        onPressed: addExpense,
-        backgroundColor:Colors.teal[400],
-        child: Icon(Icons.add),
-      ),
+    return Consumer<ExpenseData>(
+        builder: (context, value, child) => Scaffold(
+          backgroundColor: Colors.grey[300],
+          floatingActionButton: FloatingActionButton(
+            onPressed: addExpense,
+            backgroundColor:Colors.teal[400],
+            child: Icon(Icons.add_outlined),
+          ),
+          body:ListView(children: [
+            // Weekly Expenses Summary
+
+
+            // Expenses Summary
+            ListView.builder(
+                itemCount: value.getAllExpensesList().length,
+                itemBuilder: (context, index) => ExpenseTile(
+                  name: value.getAllExpensesList()[index].name,
+                  amount: value.getAllExpensesList()[index].amount,
+                  dateTime: value.getAllExpensesList()[index].dataTime,
+                )
+            )
+          ],))
     );
   }
 }
